@@ -27,6 +27,16 @@ set canvas_backend "xpyriment"
 set bidi "no"
 set background "black"
 
+define sequence Block_EXPERIMENT_A
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+
+define sequence Block_Parctice_B
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset_Practice_B always
+	run Trial_Practice_B always
+
 define sequence Block_Practice_A
 	set flush_keyboard "yes"
 	set description "Runs a number of items in sequence"
@@ -34,6 +44,9 @@ define sequence Block_Practice_A
 	run Trial_Practice_A always
 
 define reset_feedback Block_reset_Practice_A
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define reset_feedback Block_reset_Practice_B
 	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
 
 define inline_script Decide_Color
@@ -55,6 +68,30 @@ define inline_script Decide_Color
 	exp.set("color4", color4)
 	__end__
 
+define loop EXPERIMENT_A
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block_EXPERIMENT_A"
+	set description "Repeatedly runs another item"
+	set cycles 1
+	set column_order "practice"
+	set break_if "never"
+	setcycle 0 practice "no"
+	run Block_EXPERIMENT_A
+
+define sequence EXP_A
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Practice_A always
+	run EXPERIMENT_A always
+
+define sequence EXP_B
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Practice_B always
+
 define sketchpad Initial
 	set duration 1000
 	set description "Displays stimuli"
@@ -73,9 +110,23 @@ define loop Practice_A
 	set item "Block_Practice_A"
 	set description "Repeatedly runs another item"
 	set cycles 1
-	set column_order ""
+	set column_order "practice"
 	set break_if "never"
+	setcycle 0 practice "yes"
 	run Block_Practice_A
+
+define loop Practice_B
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block_Parctice_B"
+	set description "Repeatedly runs another item"
+	set cycles 1
+	set column_order "practice"
+	set break_if "never"
+	setcycle 0 practice "yes"
+	run Block_Parctice_B
 
 define sequence Prepare
 	set flush_keyboard "yes"
@@ -169,6 +220,26 @@ define sketchpad Response_Ins
 	draw textline center=1 color="#ffffff" font_bold=no font_family=mono font_italic=no font_size=60 html=yes show_if=always text="/" x=256 y=224 z_index=0
 	draw textline center=1 color="#ffffff" font_bold=no font_family=mono font_italic=no font_size=60 html=yes show_if=always text=Z x=-224 y=224 z_index=0
 	draw textline center=1 color="#aa007f" font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=60 html=yes show_if=always text=反應方式 x=0 y=-256 z_index=0
+
+define form_text_display Select_Experiment
+	set timeout "infinite"
+	set spacing 10
+	set rows "1;1;1;1"
+	set only_render "no"
+	set ok_text "Ok"
+	set margins "50;50;50;50"
+	set form_title "<span size=24>實驗名稱</span>"
+	__form_text__
+	實驗程序說明
+	__end__
+	set description "A simple text display form"
+	set cols "1;1"
+	set _theme "gray"
+	widget 0 0 2 1 label text="[form_title]"
+	widget 0 1 2 1 label center=no text="[form_text]"
+	widget 0 2 1 1 button center=yes frame=yes text=開始實驗A var=EXPA
+	widget 1 2 1 1 button center=yes frame=yes text=開始實驗B var=EXPB
+
 
 define sequence Target
 	set flush_keyboard "yes"
@@ -404,14 +475,124 @@ define loop Trial_Practice_A
 	setcycle 31 Compatibility "n"
 	run Trial
 
+define loop Trial_Practice_B
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial"
+	set description "Repeatedly runs another item"
+	set cycles 24
+	set column_order "soa;correct_response;Shape;Compatibility"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 correct_response "/"
+	setcycle 0 Shape "rect"
+	setcycle 0 Compatibility "y"
+	setcycle 1 soa "0"
+	setcycle 1 correct_response "/"
+	setcycle 1 Shape "rect"
+	setcycle 1 Compatibility "n"
+	setcycle 2 soa "0"
+	setcycle 2 correct_response "z"
+	setcycle 2 Shape "circle"
+	setcycle 2 Compatibility "y"
+	setcycle 3 soa "0"
+	setcycle 3 correct_response "z"
+	setcycle 3 Shape "circle"
+	setcycle 3 Compatibility "n"
+	setcycle 4 soa "0"
+	setcycle 4 correct_response "/"
+	setcycle 4 Shape "rect"
+	setcycle 4 Compatibility "y"
+	setcycle 5 soa "0"
+	setcycle 5 correct_response "/"
+	setcycle 5 Shape "rect"
+	setcycle 5 Compatibility "n"
+	setcycle 6 soa "0"
+	setcycle 6 correct_response "z"
+	setcycle 6 Shape "circle"
+	setcycle 6 Compatibility "y"
+	setcycle 7 soa "0"
+	setcycle 7 correct_response "z"
+	setcycle 7 Shape "circle"
+	setcycle 7 Compatibility "n"
+	setcycle 8 soa "250"
+	setcycle 8 correct_response "/"
+	setcycle 8 Shape "rect"
+	setcycle 8 Compatibility "y"
+	setcycle 9 soa "250"
+	setcycle 9 correct_response "/"
+	setcycle 9 Shape "rect"
+	setcycle 9 Compatibility "n"
+	setcycle 10 soa "250"
+	setcycle 10 correct_response "z"
+	setcycle 10 Shape "circle"
+	setcycle 10 Compatibility "y"
+	setcycle 11 soa "250"
+	setcycle 11 correct_response "z"
+	setcycle 11 Shape "circle"
+	setcycle 11 Compatibility "n"
+	setcycle 12 soa "250"
+	setcycle 12 correct_response "/"
+	setcycle 12 Shape "rect"
+	setcycle 12 Compatibility "y"
+	setcycle 13 soa "250"
+	setcycle 13 correct_response "/"
+	setcycle 13 Shape "rect"
+	setcycle 13 Compatibility "n"
+	setcycle 14 soa "250"
+	setcycle 14 correct_response "z"
+	setcycle 14 Shape "circle"
+	setcycle 14 Compatibility "y"
+	setcycle 15 soa "250"
+	setcycle 15 correct_response "z"
+	setcycle 15 Shape "circle"
+	setcycle 15 Compatibility "n"
+	setcycle 16 soa "500"
+	setcycle 16 correct_response "/"
+	setcycle 16 Shape "rect"
+	setcycle 16 Compatibility "y"
+	setcycle 17 soa "500"
+	setcycle 17 correct_response "/"
+	setcycle 17 Shape "rect"
+	setcycle 17 Compatibility "n"
+	setcycle 18 soa "500"
+	setcycle 18 correct_response "z"
+	setcycle 18 Shape "circle"
+	setcycle 18 Compatibility "y"
+	setcycle 19 soa "500"
+	setcycle 19 correct_response "z"
+	setcycle 19 Shape "circle"
+	setcycle 19 Compatibility "n"
+	setcycle 20 soa "500"
+	setcycle 20 correct_response "/"
+	setcycle 20 Shape "rect"
+	setcycle 20 Compatibility "y"
+	setcycle 21 soa "500"
+	setcycle 21 correct_response "/"
+	setcycle 21 Shape "rect"
+	setcycle 21 Compatibility "n"
+	setcycle 22 soa "500"
+	setcycle 22 correct_response "z"
+	setcycle 22 Shape "circle"
+	setcycle 22 Compatibility "y"
+	setcycle 23 soa "500"
+	setcycle 23 correct_response "z"
+	setcycle 23 Shape "circle"
+	setcycle 23 Compatibility "n"
+	run Trial
+
 define sequence experiment
 	set flush_keyboard "yes"
 	set description "Runs a number of items in sequence"
+	run Select_Experiment always
 	run Title always
 	run Response_Ins always
 	run Procedure_Ins01 always
 	run Procedure_Ins02 always
 	run Procedure_Ins03 always
 	run Ready always
-	run Practice_A always
+	run EXP_A "[EXPA]='yes'"
+	run EXP_B "[EXPB]='yes'"
 
