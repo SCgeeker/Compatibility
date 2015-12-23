@@ -92,11 +92,18 @@ plot(n, power)
 # Exact replication of Hommel's experiment 1
 
 ## How to reproduce the experiment
-- Execute and check *EXP1A_Draft01.osexp*.
-- Check the output file *quickrun.csv*.
+- Execute and check **EXP1A_Draft01.osexp**.
+- Check the output file **quickrun.csv**.
 - Where are the IVs and DVs (RT, accuracy)?
 
 ## Build the executable script
-- Complete *EXP1_V01.osexp*.
-- How to write the proposal of exact replication?
+- Complete **EXP1_V01.osexp**.  
+- Tricks to build an Opensesame script.  
+  
+**Build functional varibles in each LOOP**  
+**Use inline python code out of IVs and DVs**  
+
+## How to write the proposal of exact replication?
+- Pick up the columns in **quickrun.csv**.
+- Describe the functions of columns in this analysis.
 
