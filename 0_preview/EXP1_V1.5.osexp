@@ -33,6 +33,12 @@ define sequence Block_EXPERIMENT_A
 	run Block_reset_EXPERIMENT_A always
 	run Trial_EXPERIMENT_A always
 
+define sequence Block_EXPERIMENT_B
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset_EXPERIMENT_B always
+	run Trial_EXPERIMENT_B always
+
 define sequence Block_Parctice_B
 	set flush_keyboard "yes"
 	set description "Runs a number of items in sequence"
@@ -46,6 +52,9 @@ define sequence Block_Practice_A
 	run Trial_Practice_A always
 
 define reset_feedback Block_reset_EXPERIMENT_A
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define reset_feedback Block_reset_EXPERIMENT_B
 	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
 
 define reset_feedback Block_reset_Practice_A
@@ -91,12 +100,16 @@ define loop EXPERIMENT_B
 	set repeat 1
 	set order "random"
 	set offset "no"
-	set item ""
+	set item "Block_EXPERIMENT_B"
 	set description "Repeatedly runs another item"
-	set cycles 1
-	set column_order ""
+	set cycles 4
+	set column_order "practice"
 	set break_if "never"
-	run 
+	setcycle 0 practice "no"
+	setcycle 1 practice ""
+	setcycle 2 practice ""
+	setcycle 3 practice ""
+	run Block_EXPERIMENT_B
 
 define sequence EXP_A
 	set flush_keyboard "yes"
@@ -109,12 +122,14 @@ define sequence EXP_B
 	set flush_keyboard "yes"
 	set description "Runs a number of items in sequence"
 	run Practice_B always
+	run Feedback always
 	run EXPERIMENT_B always
 
-define sketchpad Feedback
+define feedback Feedback
+	set reset_variables "yes"
 	set duration "keypress"
-	set description "Displays stimuli"
-	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=36 html=yes show_if=always text="你的練習正確率是[accuracy]%" x=0 y=0 z_index=0
+	set description "Provides feedback to the participant"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=36 html=yes show_if=always text="練習階段的平均反應時間是[avg_rt]毫秒<br />正確率是[acc]%<br /><br />請與實驗者確認可否開始正式實驗" x=0 y=0 z_index=0
 
 define sketchpad Initial
 	set duration 1000
@@ -500,6 +515,114 @@ define loop Trial_EXPERIMENT_A
 	setcycle 31 Compatibility "n"
 	run Trial
 
+define loop Trial_EXPERIMENT_B
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial"
+	set description "Repeatedly runs another item"
+	set cycles 24
+	set column_order "soa;correct_response;Shape;Compatibility"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 correct_response "/"
+	setcycle 0 Shape "rect"
+	setcycle 0 Compatibility "y"
+	setcycle 1 soa "0"
+	setcycle 1 correct_response "/"
+	setcycle 1 Shape "rect"
+	setcycle 1 Compatibility "n"
+	setcycle 2 soa "0"
+	setcycle 2 correct_response "z"
+	setcycle 2 Shape "circle"
+	setcycle 2 Compatibility "y"
+	setcycle 3 soa "0"
+	setcycle 3 correct_response "z"
+	setcycle 3 Shape "circle"
+	setcycle 3 Compatibility "n"
+	setcycle 4 soa "0"
+	setcycle 4 correct_response "/"
+	setcycle 4 Shape "rect"
+	setcycle 4 Compatibility "y"
+	setcycle 5 soa "0"
+	setcycle 5 correct_response "/"
+	setcycle 5 Shape "rect"
+	setcycle 5 Compatibility "n"
+	setcycle 6 soa "0"
+	setcycle 6 correct_response "z"
+	setcycle 6 Shape "circle"
+	setcycle 6 Compatibility "y"
+	setcycle 7 soa "0"
+	setcycle 7 correct_response "z"
+	setcycle 7 Shape "circle"
+	setcycle 7 Compatibility "n"
+	setcycle 8 soa "250"
+	setcycle 8 correct_response "/"
+	setcycle 8 Shape "rect"
+	setcycle 8 Compatibility "y"
+	setcycle 9 soa "250"
+	setcycle 9 correct_response "/"
+	setcycle 9 Shape "rect"
+	setcycle 9 Compatibility "n"
+	setcycle 10 soa "250"
+	setcycle 10 correct_response "z"
+	setcycle 10 Shape "circle"
+	setcycle 10 Compatibility "y"
+	setcycle 11 soa "250"
+	setcycle 11 correct_response "z"
+	setcycle 11 Shape "circle"
+	setcycle 11 Compatibility "n"
+	setcycle 12 soa "250"
+	setcycle 12 correct_response "/"
+	setcycle 12 Shape "rect"
+	setcycle 12 Compatibility "y"
+	setcycle 13 soa "250"
+	setcycle 13 correct_response "/"
+	setcycle 13 Shape "rect"
+	setcycle 13 Compatibility "n"
+	setcycle 14 soa "250"
+	setcycle 14 correct_response "z"
+	setcycle 14 Shape "circle"
+	setcycle 14 Compatibility "y"
+	setcycle 15 soa "250"
+	setcycle 15 correct_response "z"
+	setcycle 15 Shape "circle"
+	setcycle 15 Compatibility "n"
+	setcycle 16 soa "500"
+	setcycle 16 correct_response "/"
+	setcycle 16 Shape "rect"
+	setcycle 16 Compatibility "y"
+	setcycle 17 soa "500"
+	setcycle 17 correct_response "/"
+	setcycle 17 Shape "rect"
+	setcycle 17 Compatibility "n"
+	setcycle 18 soa "500"
+	setcycle 18 correct_response "z"
+	setcycle 18 Shape "circle"
+	setcycle 18 Compatibility "y"
+	setcycle 19 soa "500"
+	setcycle 19 correct_response "z"
+	setcycle 19 Shape "circle"
+	setcycle 19 Compatibility "n"
+	setcycle 20 soa "500"
+	setcycle 20 correct_response "/"
+	setcycle 20 Shape "rect"
+	setcycle 20 Compatibility "y"
+	setcycle 21 soa "500"
+	setcycle 21 correct_response "/"
+	setcycle 21 Shape "rect"
+	setcycle 21 Compatibility "n"
+	setcycle 22 soa "500"
+	setcycle 22 correct_response "z"
+	setcycle 22 Shape "circle"
+	setcycle 22 Compatibility "y"
+	setcycle 23 soa "500"
+	setcycle 23 correct_response "z"
+	setcycle 23 Shape "circle"
+	setcycle 23 Compatibility "n"
+	run Trial
+
 define loop Trial_Practice_A
 	set skip 0
 	set repeat 1
@@ -647,7 +770,7 @@ define loop Trial_Practice_B
 	set offset "no"
 	set item "Trial"
 	set description "Repeatedly runs another item"
-	set cycles 24
+	set cycles 16
 	set column_order "soa;correct_response;Shape;Compatibility"
 	set break_if "never"
 	setcycle 0 soa "0"
