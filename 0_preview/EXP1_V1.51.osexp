@@ -1,0 +1,860 @@
+---
+API: 2
+OpenSesame: 3.0.4
+Platform: nt
+---
+set width 1024
+set uniform_coordinates "yes"
+set title "Hommel2002EXP01"
+set subject_parity "even"
+set subject_nr 0
+set start "experiment"
+set sampler_backend "legacy"
+set mouse_backend "xpyriment"
+set keyboard_backend "legacy"
+set height 768
+set foreground "white"
+set font_size 18
+set font_italic "no"
+set font_family "chinese-japanese-korean"
+set font_bold "no"
+set description "Default description"
+set coordinates "uniform"
+set compensation 0
+set color_backend "legacy"
+set clock_backend "legacy"
+set canvas_backend "xpyriment"
+set bidi "no"
+set background "black"
+
+define sketchpad Block_Break
+	set duration "keypress"
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=36 html=yes show_if=always text="練習階段結束<br /><br />請與實驗者確認可否開始正式實驗" x=0 y=0 z_index=0
+
+define sequence Block_EXPERIMENT_A
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset_EXPERIMENT_A always
+	run Trial_EXPERIMENT_A always
+
+define sequence Block_EXPERIMENT_B
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset_EXPERIMENT_B always
+	run Trial_EXPERIMENT_B always
+
+define sequence Block_Parctice_B
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset_Practice_B always
+	run Trial_Practice_B always
+
+define sequence Block_Practice_A
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset_Practice_A always
+	run Trial_Practice_A always
+
+define reset_feedback Block_reset_EXPERIMENT_A
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define reset_feedback Block_reset_EXPERIMENT_B
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define reset_feedback Block_reset_Practice_A
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define reset_feedback Block_reset_Practice_B
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define feedback Break
+	set reset_variables "yes"
+	set duration "keypress"
+	set description "Provides feedback to the participant"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=36 html=yes show_if=always text="這個段落的平均反應時間是[avg_rt]毫秒<br /><br />正確率是[acc]%" x=0 y=0 z_index=0
+
+define inline_script Decide_Color
+	set description "Executes Python code"
+	set _run ""
+	___prepare__
+	import random
+	
+	# Set up the colors of retangles and circles
+	stimulus_color_set = ['red', 'green', 'blue', 'yellow']
+	random.shuffle(stimulus_color_set)
+	color1 = stimulus_color_set[0]    # color of target
+	color2 = stimulus_color_set[1]
+	color3 = stimulus_color_set[2]
+	color4 = stimulus_color_set[3]
+	exp.set("color1", color1)
+	exp.set("color2", color2)
+	exp.set("color3", color3)
+	exp.set("color4", color4)
+	__end__
+
+define loop EXPERIMENT_A
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block_EXPERIMENT_A"
+	set description "Repeatedly runs another item"
+	set cycles 4
+	set column_order "practice"
+	set break_if "never"
+	setcycle 0 practice "no"
+	run Block_EXPERIMENT_A
+
+define loop EXPERIMENT_B
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block_EXPERIMENT_B"
+	set description "Repeatedly runs another item"
+	set cycles 4
+	set column_order "practice"
+	set break_if "never"
+	setcycle 0 practice "no"
+	setcycle 1 practice ""
+	setcycle 2 practice ""
+	setcycle 3 practice ""
+	run Block_EXPERIMENT_B
+
+define sequence EXP_A
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Practice_A always
+	run Block_Break always
+	run EXPERIMENT_A always
+
+define sequence EXP_B
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Practice_B always
+	run Block_Break always
+	run EXPERIMENT_B always
+
+define sketchpad Initial
+	set duration 1000
+	set description "Displays stimuli"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+
+define sketchpad Intertrial
+	set duration 1500
+	set description "Displays stimuli"
+
+define loop Practice_A
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block_Practice_A"
+	set description "Repeatedly runs another item"
+	set cycles 2
+	set column_order "practice"
+	set break_if "never"
+	setcycle 0 practice "yes"
+	run Block_Practice_A
+
+define loop Practice_B
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block_Parctice_B"
+	set description "Repeatedly runs another item"
+	set cycles 4
+	set column_order "practice"
+	set break_if "never"
+	setcycle 0 practice "yes"
+	setcycle 1 practice ""
+	run Block_Parctice_B
+
+define sequence Prepare
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Prepare_circle_incompatible "[Shape]=circle and [Compatibility]=n"
+	run Prepare_circle_compatible "[Shape]=circle and [Compatibility]=y"
+	run Prepare_rect_incompatible "[Shape]=rect and [Compatibility]=n"
+	run Prepare_rect_compatible "[Shape]=rect and [Compatibility]=y"
+
+define sketchpad Prepare_circle_compatible
+	set duration "[soa]"
+	set description "Displays circle compatible"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color2]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color4]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color3]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Prepare_circle_incompatible
+	set duration "[soa]"
+	set description "Displays rect compatible"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color2]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color4]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color3]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Prepare_rect_compatible
+	set duration "[soa]"
+	set description "Displays rect compatible"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Prepare_rect_incompatible
+	set duration "[soa]"
+	set description "Displays rect incompatible"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Procedure_Ins01
+	set duration "keypress"
+	set description "Displays stimuli"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw textline center=1 color="#aa007f" font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=60 html=yes show_if=always text="嘗試開始<br />提示畫面" x=0 y=0 z_index=0
+
+define sketchpad Procedure_Ins02
+	set duration "keypress"
+	set description "Displays rect incompatible"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color=red fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color=green fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color=yellow fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw textline center=1 color="#aa007f" font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=60 html=yes show_if=always text=預備畫面 x=0 y=0 z_index=0
+	draw rect color="#0000ff" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Procedure_Ins03
+	set duration "keypress"
+	set description "Displays rect incompatible"
+	draw rect color=red fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=red penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color=red fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color=green fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color=yellow fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw textline center=1 color="#aa007f" font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=60 html=yes show_if=always text=反應畫面 x=0 y=0 z_index=0
+	draw rect color="#0000ff" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Ready
+	set duration "keypress"
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=60 html=yes show_if=always text=測試即將開始 x=0 y=0 z_index=0
+
+define sketchpad Response_Ins
+	set duration "keypress"
+	set description "Instruction02"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color=white fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=-160 z_index=0
+	draw circle color=white fill=1 penwidth=1 r=150 show_if=always x=-224 y=0 z_index=0
+	draw textline center=1 color="#ffffff" font_bold=no font_family=mono font_italic=no font_size=60 html=yes show_if=always text="/" x=256 y=224 z_index=0
+	draw textline center=1 color="#ffffff" font_bold=no font_family=mono font_italic=no font_size=60 html=yes show_if=always text=Z x=-224 y=224 z_index=0
+	draw textline center=1 color="#aa007f" font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=60 html=yes show_if=always text=反應方式 x=0 y=-256 z_index=0
+
+define form_text_display Select_Experiment
+	set timeout "infinite"
+	set spacing 10
+	set rows "1;1;1;1"
+	set only_render "no"
+	set ok_text "Ok"
+	set margins "50;50;50;50"
+	set form_title "<span size=24>實驗名稱</span>"
+	__form_text__
+	實驗程序說明
+	__end__
+	set description "A simple text display form"
+	set cols "1;1"
+	set _theme "gray"
+	widget 0 0 2 1 label text="[form_title]"
+	widget 0 1 2 1 label center=no text="[form_text]"
+	widget 0 2 1 1 button center=yes frame=yes text=開始實驗A var=EXPA
+	widget 1 2 1 1 button center=yes frame=yes text=開始實驗B var=EXPB
+
+
+define sequence Target
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Target_circle_incompatible "[Shape]=circle and [Compatibility]=n"
+	run Target_circle_compatible "[Shape]=circle and [Compatibility]=y"
+	run Target_rect_incompatible "[Shape]=rect and [Compatibility]=n"
+	run Target_rect_compatible "[Shape]=rect and [Compatibility]=y"
+
+define sketchpad Target_circle_compatible
+	set duration 0
+	set description "Displays circle compatible"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color2]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color4]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color3]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Target_circle_incompatible
+	set duration 0
+	set description "Displays rect compatible"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color2]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color4]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color3]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Target_rect_compatible
+	set duration 0
+	set description "Displays rect compatible"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Target_rect_incompatible
+	set duration 0
+	set description "Displays rect incompatible"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define keyboard_response Target_response
+	set timeout 2000
+	set flush "yes"
+	set duration "keypress"
+	set description "Collects keyboard responses"
+	set allowed_responses "z;/"
+
+define sketchpad Target_response_BadResponse
+	set duration 100
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=56 html=yes show_if=always text="不正常按鍵！" x=0 y=0 z_index=0
+
+define sketchpad Target_response_Correct
+	set duration 100
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=56 html=yes show_if=always text="答對了！" x=0 y=0 z_index=0
+
+define sketchpad Target_response_Wrong
+	set duration 100
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=56 html=yes show_if=always text="答錯了！" x=0 y=0 z_index=0
+
+define logger Target_response_logger
+	set description "Logs experimental data"
+	set auto_log "yes"
+
+define sketchpad Title
+	set duration "keypress"
+	set description "Instruction01"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=56 html=yes show_if=always text=歡迎參加益智遊戲測試 x=0 y=0 z_index=0
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=32 html=yes show_if=always text=按空白鍵開始了解程序 x=0 y=128 z_index=0
+
+define sequence Trial
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Decide_Color always
+	run Intertrial always
+	run Initial always
+	run Prepare always
+	run Target always
+	run Target_response always
+	run Target_response_Correct "[correct]=1"
+	run Target_response_Wrong "[correct]=0"
+	run Target_response_BadResponse "[response_time]<151 or [response_time]>1999"
+	run Target_response_logger always
+	run Break "=self.get('count_Trial') %32 == 31"
+
+define loop Trial_EXPERIMENT_A
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial"
+	set description "Repeatedly runs another item"
+	set cycles 32
+	set column_order "soa;correct_response;Shape;Compatibility"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 correct_response "/"
+	setcycle 0 Shape "rect"
+	setcycle 0 Compatibility "y"
+	setcycle 1 soa "0"
+	setcycle 1 correct_response "/"
+	setcycle 1 Shape "rect"
+	setcycle 1 Compatibility "n"
+	setcycle 2 soa "0"
+	setcycle 2 correct_response "z"
+	setcycle 2 Shape "circle"
+	setcycle 2 Compatibility "y"
+	setcycle 3 soa "0"
+	setcycle 3 correct_response "z"
+	setcycle 3 Shape "circle"
+	setcycle 3 Compatibility "n"
+	setcycle 4 soa "0"
+	setcycle 4 correct_response "/"
+	setcycle 4 Shape "rect"
+	setcycle 4 Compatibility "y"
+	setcycle 5 soa "0"
+	setcycle 5 correct_response "/"
+	setcycle 5 Shape "rect"
+	setcycle 5 Compatibility "n"
+	setcycle 6 soa "0"
+	setcycle 6 correct_response "z"
+	setcycle 6 Shape "circle"
+	setcycle 6 Compatibility "y"
+	setcycle 7 soa "0"
+	setcycle 7 correct_response "z"
+	setcycle 7 Shape "circle"
+	setcycle 7 Compatibility "n"
+	setcycle 8 soa "500"
+	setcycle 8 correct_response "/"
+	setcycle 8 Shape "rect"
+	setcycle 8 Compatibility "y"
+	setcycle 9 soa "500"
+	setcycle 9 correct_response "/"
+	setcycle 9 Shape "rect"
+	setcycle 9 Compatibility "n"
+	setcycle 10 soa "500"
+	setcycle 10 correct_response "z"
+	setcycle 10 Shape "circle"
+	setcycle 10 Compatibility "y"
+	setcycle 11 soa "500"
+	setcycle 11 correct_response "z"
+	setcycle 11 Shape "circle"
+	setcycle 11 Compatibility "n"
+	setcycle 12 soa "500"
+	setcycle 12 correct_response "/"
+	setcycle 12 Shape "rect"
+	setcycle 12 Compatibility "y"
+	setcycle 13 soa "500"
+	setcycle 13 correct_response "/"
+	setcycle 13 Shape "rect"
+	setcycle 13 Compatibility "n"
+	setcycle 14 soa "500"
+	setcycle 14 correct_response "z"
+	setcycle 14 Shape "circle"
+	setcycle 14 Compatibility "y"
+	setcycle 15 soa "500"
+	setcycle 15 correct_response "z"
+	setcycle 15 Shape "circle"
+	setcycle 15 Compatibility "n"
+	setcycle 16 soa "1000"
+	setcycle 16 correct_response "/"
+	setcycle 16 Shape "rect"
+	setcycle 16 Compatibility "y"
+	setcycle 17 soa "1000"
+	setcycle 17 correct_response "/"
+	setcycle 17 Shape "rect"
+	setcycle 17 Compatibility "n"
+	setcycle 18 soa "1000"
+	setcycle 18 correct_response "z"
+	setcycle 18 Shape "circle"
+	setcycle 18 Compatibility "y"
+	setcycle 19 soa "1000"
+	setcycle 19 correct_response "z"
+	setcycle 19 Shape "circle"
+	setcycle 19 Compatibility "n"
+	setcycle 20 soa "1000"
+	setcycle 20 correct_response "/"
+	setcycle 20 Shape "rect"
+	setcycle 20 Compatibility "y"
+	setcycle 21 soa "1000"
+	setcycle 21 correct_response "/"
+	setcycle 21 Shape "rect"
+	setcycle 21 Compatibility "n"
+	setcycle 22 soa "1000"
+	setcycle 22 correct_response "z"
+	setcycle 22 Shape "circle"
+	setcycle 22 Compatibility "y"
+	setcycle 23 soa "1000"
+	setcycle 23 correct_response "z"
+	setcycle 23 Shape "circle"
+	setcycle 23 Compatibility "n"
+	setcycle 24 soa "1500"
+	setcycle 24 correct_response "/"
+	setcycle 24 Shape "rect"
+	setcycle 24 Compatibility "y"
+	setcycle 25 soa "1500"
+	setcycle 25 correct_response "/"
+	setcycle 25 Shape "rect"
+	setcycle 25 Compatibility "n"
+	setcycle 26 soa "1500"
+	setcycle 26 correct_response "z"
+	setcycle 26 Shape "circle"
+	setcycle 26 Compatibility "y"
+	setcycle 27 soa "1500"
+	setcycle 27 correct_response "z"
+	setcycle 27 Shape "circle"
+	setcycle 27 Compatibility "n"
+	setcycle 28 soa "1500"
+	setcycle 28 correct_response "/"
+	setcycle 28 Shape "rect"
+	setcycle 28 Compatibility "y"
+	setcycle 29 soa "1500"
+	setcycle 29 correct_response "/"
+	setcycle 29 Shape "rect"
+	setcycle 29 Compatibility "n"
+	setcycle 30 soa "1500"
+	setcycle 30 correct_response "z"
+	setcycle 30 Shape "circle"
+	setcycle 30 Compatibility "y"
+	setcycle 31 soa "1500"
+	setcycle 31 correct_response "z"
+	setcycle 31 Shape "circle"
+	setcycle 31 Compatibility "n"
+	run Trial
+
+define loop Trial_EXPERIMENT_B
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial"
+	set description "Repeatedly runs another item"
+	set cycles 24
+	set column_order "soa;correct_response;Shape;Compatibility"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 correct_response "/"
+	setcycle 0 Shape "rect"
+	setcycle 0 Compatibility "y"
+	setcycle 1 soa "0"
+	setcycle 1 correct_response "/"
+	setcycle 1 Shape "rect"
+	setcycle 1 Compatibility "n"
+	setcycle 2 soa "0"
+	setcycle 2 correct_response "z"
+	setcycle 2 Shape "circle"
+	setcycle 2 Compatibility "y"
+	setcycle 3 soa "0"
+	setcycle 3 correct_response "z"
+	setcycle 3 Shape "circle"
+	setcycle 3 Compatibility "n"
+	setcycle 4 soa "0"
+	setcycle 4 correct_response "/"
+	setcycle 4 Shape "rect"
+	setcycle 4 Compatibility "y"
+	setcycle 5 soa "0"
+	setcycle 5 correct_response "/"
+	setcycle 5 Shape "rect"
+	setcycle 5 Compatibility "n"
+	setcycle 6 soa "0"
+	setcycle 6 correct_response "z"
+	setcycle 6 Shape "circle"
+	setcycle 6 Compatibility "y"
+	setcycle 7 soa "0"
+	setcycle 7 correct_response "z"
+	setcycle 7 Shape "circle"
+	setcycle 7 Compatibility "n"
+	setcycle 8 soa "250"
+	setcycle 8 correct_response "/"
+	setcycle 8 Shape "rect"
+	setcycle 8 Compatibility "y"
+	setcycle 9 soa "250"
+	setcycle 9 correct_response "/"
+	setcycle 9 Shape "rect"
+	setcycle 9 Compatibility "n"
+	setcycle 10 soa "250"
+	setcycle 10 correct_response "z"
+	setcycle 10 Shape "circle"
+	setcycle 10 Compatibility "y"
+	setcycle 11 soa "250"
+	setcycle 11 correct_response "z"
+	setcycle 11 Shape "circle"
+	setcycle 11 Compatibility "n"
+	setcycle 12 soa "250"
+	setcycle 12 correct_response "/"
+	setcycle 12 Shape "rect"
+	setcycle 12 Compatibility "y"
+	setcycle 13 soa "250"
+	setcycle 13 correct_response "/"
+	setcycle 13 Shape "rect"
+	setcycle 13 Compatibility "n"
+	setcycle 14 soa "250"
+	setcycle 14 correct_response "z"
+	setcycle 14 Shape "circle"
+	setcycle 14 Compatibility "y"
+	setcycle 15 soa "250"
+	setcycle 15 correct_response "z"
+	setcycle 15 Shape "circle"
+	setcycle 15 Compatibility "n"
+	setcycle 16 soa "500"
+	setcycle 16 correct_response "/"
+	setcycle 16 Shape "rect"
+	setcycle 16 Compatibility "y"
+	setcycle 17 soa "500"
+	setcycle 17 correct_response "/"
+	setcycle 17 Shape "rect"
+	setcycle 17 Compatibility "n"
+	setcycle 18 soa "500"
+	setcycle 18 correct_response "z"
+	setcycle 18 Shape "circle"
+	setcycle 18 Compatibility "y"
+	setcycle 19 soa "500"
+	setcycle 19 correct_response "z"
+	setcycle 19 Shape "circle"
+	setcycle 19 Compatibility "n"
+	setcycle 20 soa "500"
+	setcycle 20 correct_response "/"
+	setcycle 20 Shape "rect"
+	setcycle 20 Compatibility "y"
+	setcycle 21 soa "500"
+	setcycle 21 correct_response "/"
+	setcycle 21 Shape "rect"
+	setcycle 21 Compatibility "n"
+	setcycle 22 soa "500"
+	setcycle 22 correct_response "z"
+	setcycle 22 Shape "circle"
+	setcycle 22 Compatibility "y"
+	setcycle 23 soa "500"
+	setcycle 23 correct_response "z"
+	setcycle 23 Shape "circle"
+	setcycle 23 Compatibility "n"
+	run Trial
+
+define loop Trial_Practice_A
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial"
+	set description "Run basic cycle of trials"
+	set cycles 32
+	set column_order "soa;Shape;Compatibility;correct_response"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 correct_response "/"
+	setcycle 0 Shape "rect"
+	setcycle 0 Compatibility "y"
+	setcycle 1 soa "0"
+	setcycle 1 correct_response "/"
+	setcycle 1 Shape "rect"
+	setcycle 1 Compatibility "n"
+	setcycle 2 soa "0"
+	setcycle 2 correct_response "z"
+	setcycle 2 Shape "circle"
+	setcycle 2 Compatibility "y"
+	setcycle 3 soa "0"
+	setcycle 3 correct_response "z"
+	setcycle 3 Shape "circle"
+	setcycle 3 Compatibility "n"
+	setcycle 4 soa "0"
+	setcycle 4 correct_response "/"
+	setcycle 4 Shape "rect"
+	setcycle 4 Compatibility "y"
+	setcycle 5 soa "0"
+	setcycle 5 correct_response "/"
+	setcycle 5 Shape "rect"
+	setcycle 5 Compatibility "n"
+	setcycle 6 soa "0"
+	setcycle 6 correct_response "z"
+	setcycle 6 Shape "circle"
+	setcycle 6 Compatibility "y"
+	setcycle 7 soa "0"
+	setcycle 7 correct_response "z"
+	setcycle 7 Shape "circle"
+	setcycle 7 Compatibility "n"
+	setcycle 8 soa "500"
+	setcycle 8 correct_response "/"
+	setcycle 8 Shape "rect"
+	setcycle 8 Compatibility "y"
+	setcycle 9 soa "500"
+	setcycle 9 correct_response "/"
+	setcycle 9 Shape "rect"
+	setcycle 9 Compatibility "n"
+	setcycle 10 soa "500"
+	setcycle 10 correct_response "z"
+	setcycle 10 Shape "circle"
+	setcycle 10 Compatibility "y"
+	setcycle 11 soa "500"
+	setcycle 11 correct_response "z"
+	setcycle 11 Shape "circle"
+	setcycle 11 Compatibility "n"
+	setcycle 12 soa "500"
+	setcycle 12 correct_response "/"
+	setcycle 12 Shape "rect"
+	setcycle 12 Compatibility "y"
+	setcycle 13 soa "500"
+	setcycle 13 correct_response "/"
+	setcycle 13 Shape "rect"
+	setcycle 13 Compatibility "n"
+	setcycle 14 soa "500"
+	setcycle 14 correct_response "z"
+	setcycle 14 Shape "circle"
+	setcycle 14 Compatibility "y"
+	setcycle 15 soa "500"
+	setcycle 15 correct_response "z"
+	setcycle 15 Shape "circle"
+	setcycle 15 Compatibility "n"
+	setcycle 16 soa "1000"
+	setcycle 16 correct_response "/"
+	setcycle 16 Shape "rect"
+	setcycle 16 Compatibility "y"
+	setcycle 17 soa "1000"
+	setcycle 17 correct_response "/"
+	setcycle 17 Shape "rect"
+	setcycle 17 Compatibility "n"
+	setcycle 18 soa "1000"
+	setcycle 18 correct_response "z"
+	setcycle 18 Shape "circle"
+	setcycle 18 Compatibility "y"
+	setcycle 19 soa "1000"
+	setcycle 19 correct_response "z"
+	setcycle 19 Shape "circle"
+	setcycle 19 Compatibility "n"
+	setcycle 20 soa "1000"
+	setcycle 20 correct_response "/"
+	setcycle 20 Shape "rect"
+	setcycle 20 Compatibility "y"
+	setcycle 21 soa "1000"
+	setcycle 21 correct_response "/"
+	setcycle 21 Shape "rect"
+	setcycle 21 Compatibility "n"
+	setcycle 22 soa "1000"
+	setcycle 22 correct_response "z"
+	setcycle 22 Shape "circle"
+	setcycle 22 Compatibility "y"
+	setcycle 23 soa "1000"
+	setcycle 23 correct_response "z"
+	setcycle 23 Shape "circle"
+	setcycle 23 Compatibility "n"
+	setcycle 24 soa "1500"
+	setcycle 24 correct_response "/"
+	setcycle 24 Shape "rect"
+	setcycle 24 Compatibility "y"
+	setcycle 25 soa "1500"
+	setcycle 25 correct_response "/"
+	setcycle 25 Shape "rect"
+	setcycle 25 Compatibility "n"
+	setcycle 26 soa "1500"
+	setcycle 26 correct_response "z"
+	setcycle 26 Shape "circle"
+	setcycle 26 Compatibility "y"
+	setcycle 27 soa "1500"
+	setcycle 27 correct_response "z"
+	setcycle 27 Shape "circle"
+	setcycle 27 Compatibility "n"
+	setcycle 28 soa "1500"
+	setcycle 28 correct_response "/"
+	setcycle 28 Shape "rect"
+	setcycle 28 Compatibility "y"
+	setcycle 29 soa "1500"
+	setcycle 29 correct_response "/"
+	setcycle 29 Shape "rect"
+	setcycle 29 Compatibility "n"
+	setcycle 30 soa "1500"
+	setcycle 30 correct_response "z"
+	setcycle 30 Shape "circle"
+	setcycle 30 Compatibility "y"
+	setcycle 31 soa "1500"
+	setcycle 31 correct_response "z"
+	setcycle 31 Shape "circle"
+	setcycle 31 Compatibility "n"
+	run Trial
+
+define loop Trial_Practice_B
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial"
+	set description "Repeatedly runs another item"
+	set cycles 16
+	set column_order "soa;correct_response;Shape;Compatibility"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 correct_response "/"
+	setcycle 0 Shape "rect"
+	setcycle 0 Compatibility "y"
+	setcycle 1 soa "0"
+	setcycle 1 correct_response "/"
+	setcycle 1 Shape "rect"
+	setcycle 1 Compatibility "n"
+	setcycle 2 soa "0"
+	setcycle 2 correct_response "z"
+	setcycle 2 Shape "circle"
+	setcycle 2 Compatibility "y"
+	setcycle 3 soa "0"
+	setcycle 3 correct_response "z"
+	setcycle 3 Shape "circle"
+	setcycle 3 Compatibility "n"
+	setcycle 4 soa "0"
+	setcycle 4 correct_response "/"
+	setcycle 4 Shape "rect"
+	setcycle 4 Compatibility "y"
+	setcycle 5 soa "0"
+	setcycle 5 correct_response "/"
+	setcycle 5 Shape "rect"
+	setcycle 5 Compatibility "n"
+	setcycle 6 soa "0"
+	setcycle 6 correct_response "z"
+	setcycle 6 Shape "circle"
+	setcycle 6 Compatibility "y"
+	setcycle 7 soa "0"
+	setcycle 7 correct_response "z"
+	setcycle 7 Shape "circle"
+	setcycle 7 Compatibility "n"
+	setcycle 8 soa "500"
+	setcycle 8 correct_response "/"
+	setcycle 8 Shape "rect"
+	setcycle 8 Compatibility "y"
+	setcycle 9 soa "500"
+	setcycle 9 correct_response "/"
+	setcycle 9 Shape "rect"
+	setcycle 9 Compatibility "n"
+	setcycle 10 soa "500"
+	setcycle 10 correct_response "z"
+	setcycle 10 Shape "circle"
+	setcycle 10 Compatibility "y"
+	setcycle 11 soa "500"
+	setcycle 11 correct_response "z"
+	setcycle 11 Shape "circle"
+	setcycle 11 Compatibility "n"
+	setcycle 12 soa "500"
+	setcycle 12 correct_response "/"
+	setcycle 12 Shape "rect"
+	setcycle 12 Compatibility "y"
+	setcycle 13 soa "500"
+	setcycle 13 correct_response "/"
+	setcycle 13 Shape "rect"
+	setcycle 13 Compatibility "n"
+	setcycle 14 soa "500"
+	setcycle 14 correct_response "z"
+	setcycle 14 Shape "circle"
+	setcycle 14 Compatibility "y"
+	setcycle 15 soa "500"
+	setcycle 15 correct_response "z"
+	setcycle 15 Shape "circle"
+	setcycle 15 Compatibility "n"
+	run Trial
+
+define sequence experiment
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Select_Experiment always
+	run Title always
+	run Response_Ins always
+	run Procedure_Ins01 always
+	run Procedure_Ins02 always
+	run Procedure_Ins03 always
+	run Ready always
+	run EXP_A "[EXPA]='yes'"
+	run EXP_B "[EXPB]='yes'"
+
