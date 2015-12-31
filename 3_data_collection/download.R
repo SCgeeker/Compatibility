@@ -1,3 +1,5 @@
+# 在專案總目錄執行
+
 # import the necessary packages
 if(!require(httr)){install.packages("httr")}
 library(httr)  # Download the files from osf
