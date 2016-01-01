@@ -277,7 +277,6 @@ define form_text_display Select_Experiment
 	步驟二：隨後在框框裡會出現二個圓形和二個方形，每一個圖形的顏色都不同  
 	步驟三：接著框框會改變顏色，請依照框框的顏色確認相對應顏色的圖形。  
 	步驟四：看到圓形請按"Z"鍵；看到正方形請按"/"鍵。請在二秒內做出正確反應。
-	 
 	__end__
 	set description "A simple text display form"
 	set cols "1;1"
