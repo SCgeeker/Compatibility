@@ -30,6 +30,7 @@ EXPB <- data.frame(
 ) # Summarize EXPB data by subject
 
 
+# Write the code book for cleaned data
 Codebook_Clean <- data.frame(
     Variable = names(EXPA),
     Values = c("char","integer","y or n", "numeric", "numeric"),
@@ -42,6 +43,9 @@ Codebook_Clean <- data.frame(
     )
 )
 
+# Save the cleaned data
 write.csv(EXPA, file = "../4_data_analysis/Compatibility_A.csv", quote = FALSE, row.names = FALSE, fileEncoding = "UTF-8")
 write.csv(EXPB, file = "../4_data_analysis/Compatibility_B.csv", quote = FALSE, row.names = FALSE, fileEncoding = "UTF-8")
 write.csv(Codebook_Clean, file = "../4_data_analysis/Codebook_Clean.csv", quote = FALSE, row.names = FALSE, fileEncoding = "UTF-8")
+
+rm(list = ls()) # remove all objects in the environment

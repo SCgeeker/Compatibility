@@ -41,6 +41,6 @@ EXPB_Table <- data.frame(
     row.names = NULL
 )  # Summarize EXPA data by subject
 
-EXPB_Table <- EXPB_Table[order(as.numeric(as.character(EXPB_M$SOA))),] # sort data by SOA
+EXPB_Table <- EXPB_Table[order(as.numeric(as.character(EXPB_Table$SOA))),] # sort data by SOA
 
 # We are going to reproduce Figure 2 in use of EXPA_Table and EXPB_Table
