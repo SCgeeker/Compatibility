@@ -3,7 +3,7 @@ library(stringi) # Procoss the variable names
 
 setwd("../3_data_collection") # Run this line if you do not continue the work after downloaded files
 
-filenames <- c("A-0.csv","test-B.csv")
+filenames <- dir("RAW")
 
 # 定義原始資料檔名,隨下載後的檔案名稱調整
 # Init_name就是subject ID 
@@ -13,7 +13,7 @@ end_name <- ".csv"
 DF <- data.frame()  # 空白data frame，存放Stroop原始資料
 
 for(i in 1:length(filenames)  ){
-    subj0 <- read.csv(paste0("RAW/", filenames[i]))
+    subj0 <- read.csv(paste0("RAW/", filenames[i]), fileEncoding = "UTF-8")
     subj0 <- subj0[subj0$practice == "no" ,c("response_time", "correct", "EXPA", "EXPB", "soa","Compatibility")]  # Opensesame script has to have the accurate setting for cycles.
     
     subj_id <- gsub(end_name,"",filenames[i]) 
@@ -25,6 +25,7 @@ for(i in 1:length(filenames)  ){
     rm(subj0,subj_id)
 } 
 
+# Write the code book
 codebook_Raw <- data.frame(
     Variable = names(DF),
     Values = c("char","integer","numeric", "1,0", "yes,no", "yes,no","integer","y,n"),
@@ -40,5 +41,8 @@ codebook_Raw <- data.frame(
     )
 )
 
+# Merge all raw data to a single file
 write.csv(DF, file = "Compatibility_Raw.csv", quote = FALSE, row.names = FALSE, fileEncoding = "UTF-8")
 write.csv(codebook_Raw, file = "Codebook_Raw.csv", quote = FALSE, row.names = FALSE, fileEncoding = "UTF-8")
+
+rm(list = ls())  # clean all objects in the environment
