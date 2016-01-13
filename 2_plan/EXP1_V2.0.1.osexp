@@ -202,20 +202,20 @@ define sketchpad Prepare_rect_compatible
 	set description "Displays rect compatible"
 	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
 	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
-	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
 	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
 	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
-	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
 
 define sketchpad Prepare_rect_incompatible
 	set duration "[soa]"
 	set description "Displays rect incompatible"
 	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
 	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
-	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
 	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
 	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
-	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
 
 define sketchpad Procedure_Ins01
 	set duration "keypress"
@@ -277,7 +277,6 @@ define form_text_display Select_Experiment
 	步驟二：隨後在框框裡會出現二個圓形和二個方形，每一個圖形的顏色都不同  
 	步驟三：接著框框會改變顏色，請依照框框的顏色確認相對應顏色的圖形。  
 	步驟四：看到圓形請按"Z"鍵；看到正方形請按"/"鍵。請在二秒內做出正確反應。
-	 
 	__end__
 	set description "A simple text display form"
 	set cols "1;1"
@@ -321,20 +320,20 @@ define sketchpad Target_rect_compatible
 	set description "Displays rect compatible"
 	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
 	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
-	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
 	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
 	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
-	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
 
 define sketchpad Target_rect_incompatible
 	set duration 0
 	set description "Displays rect incompatible"
 	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
 	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
-	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
 	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
 	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
-	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
 
 define keyboard_response Target_response
 	set timeout 2000

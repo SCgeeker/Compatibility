@@ -40,7 +40,7 @@ filenames <- c(A_files, B_files)  # filenames for analysis
 # 下載到本機指定資料夾
 
 # change the working directory to 3_Data_Collection
-setwd("./3_data_collection/")
+setwd("../3_data_collection/")
 
 dir.create("RAW", showWarnings = FALSE)
 for(i in 1:length(rawurls)){

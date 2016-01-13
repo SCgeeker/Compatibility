@@ -12,9 +12,12 @@ end_name <- ".csv"
 # 讀入原始資料指定欄位到data frame
 DF <- data.frame()  # 空白data frame，存放Stroop原始資料
 
+# if the for loop is freeze, append the below code
+#, fileEncoding = "UTF-8"
+
 for(i in 1:length(filenames)  ){
-    subj0 <- read.csv(paste0("RAW/", filenames[i]), fileEncoding = "UTF-8")
-    subj0 <- subj0[subj0$practice == "no" ,c("response_time", "correct", "EXPA", "EXPB", "soa","Compatibility")]  # Opensesame script has to have the accurate setting for cycles.
+    subj0 <- read.csv(paste0("RAW/", filenames[i]))
+    subj0 <- subj0[subj0$practice == "no" ,c("response_time", "correct", "EXPA", "EXPB", "soa", "Shape","Compatibility")]  # Opensesame script has to have the accurate setting for cycles.
     
     subj_id <- gsub(end_name,"",filenames[i]) 
 
@@ -25,10 +28,16 @@ for(i in 1:length(filenames)  ){
     rm(subj0,subj_id)
 } 
 
+#tmp <- DF[DF$Shape == "rect",]$Compatibility
+#levels(tmp) <- c("y","n")
+
+levels(DF[DF$Shape == "rect",]$Compatibility) <- c("y","n")  # correct the wrong labels
+
+
 # Write the code book
 codebook_Raw <- data.frame(
     Variable = names(DF),
-    Values = c("char","integer","numeric", "1,0", "yes,no", "yes,no","integer","y,n"),
+    Values = c("char","integer","numeric", "1,0", "yes,no", "yes,no","integer","char","y,n"),
     Description = c(
         "Filename is the subject ID",
         "sequence of trial",
@@ -37,6 +46,7 @@ codebook_Raw <- data.frame(
         "yes: This is from EXPA, no: This is from EXPB",
         "yes: This is from EXPB, no: This is from EXPA",
         "soa of this trial",
+        "shape of target",
         "y: this is a compatible target; n: this is an incompatible target"
     )
 )

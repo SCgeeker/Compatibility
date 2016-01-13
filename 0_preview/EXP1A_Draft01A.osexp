@@ -1,0 +1,251 @@
+---
+API: 2
+OpenSesame: 3.0.2
+Platform: nt
+---
+set width 1024
+set uniform_coordinates "yes"
+set title "New experiment"
+set subject_parity "even"
+set subject_nr 0
+set start "experiment"
+set height 768
+set foreground "white"
+set description "Default description"
+set coordinates "uniform"
+set compensation 0
+set canvas_backend "xpyriment"
+set background "black"
+
+define sequence Block
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset always
+	run Trial always
+
+define reset_feedback Block_reset
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define inline_script Decide_Color
+	set description "Executes Python code"
+	set _run ""
+	___prepare__
+	import random
+	
+	# Set up the colors of retangles and circles
+	#target_shape_set = {Retangle:'Retangle', Circle:'Circle'}
+	target_color_set = ['red', 'green', 'blue', 'yellow']
+	#if target_shape == 'Retangle'
+	
+	random.shuffle(target_color_set)
+	color1 = target_color_set[0]
+	color2 = target_color_set[1]
+	color3 = target_color_set[2]
+	color4 = target_color_set[3]
+	exp.set("color1", color1)
+	exp.set("color2", color2)
+	exp.set("color3", color3)
+	exp.set("color4", color4)
+	__end__
+
+define sketchpad Initial
+	set duration 1000
+	set description "Displays stimuli"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+
+define sketchpad Intertrial
+	set duration 1500
+	set description "Displays stimuli"
+
+define sequence Prepare
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Prepare_square_com "[Target_Shape] = \"rect\" and [Target_Compatibility] = \"Compatible\""
+	run Prepare_square_incom "[Target_Shape] = \"rect\" and [Target_Compatibility] = \"Incompatible\""
+	run Prepare_circle_com "[Target_Shape] = \"circle\" and [Target_Compatibility] = \"Compatible\""
+	run Prepare_circle_incom "[Target_Shape] = \"circle\" and [Target_Compatibility] = \"Incompatible\""
+
+define sketchpad Prepare_circle_com
+	set duration "[soa]"
+	set description "Display Prepare sti"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color2]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Prepare_circle_incom
+	set duration "[soa]"
+	set description "Display Prepare sti"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color3]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Prepare_square_com
+	set duration "[soa]"
+	set description "Display Prepare sti"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Prepare_square_incom
+	set duration "[soa]"
+	set description "Display Prepare sti"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define keyboard_response Response
+	set timeout 2000
+	set flush "yes"
+	set duration "keypress"
+	set description "Collects keyboard responses"
+	set allowed_responses "z,/"
+
+define sketchpad Response_correct
+	set duration 750
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=72 html=yes show_if=always text="答對了!" x=0 y=0 z_index=0
+
+define logger Response_logger
+	set description "Logs experimental data"
+	set auto_log "yes"
+
+define sketchpad Response_wrong
+	set duration 750
+	set description "Displays stimuli"
+	draw textline center=1 color=white font_bold=no font_family="chinese-japanese-korean" font_italic=no font_size=72 html=yes show_if=always text="答錯了!" x=0 y=0 z_index=0
+
+define sequence Target
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Target_square_com "[Target_Shape] = \"rect\" and [Target_Compatibility] = \"Compatible\""
+	run Target_square_incom "[Target_Shape] = \"rect\" and [Target_Compatibility] = \"Incompatible\""
+	run Target_circle_com "[Target_Shape] = \"circle\" and [Target_Compatibility] = \"Incompatible\""
+	run Target_circle_incom "[Target_Shape] = \"circle\" and [Target_Compatibility] = \"Compatible\""
+
+define sketchpad Target_circle_com
+	set duration 2000
+	set description "Displays target"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color2]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Target_circle_incom
+	set duration 500
+	set description "Displays target"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color1]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color3]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Target_square_com
+	set duration 2000
+	set description "Displays target"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Target_square_incom
+	set duration 2000
+	set description "Displays target"
+	draw rect color="[color1]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[color1]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define loop Trial
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial_1"
+	set description "Repeatedly runs another item"
+	set cycles 8
+	set column_order "soa;Target_Shape;Target_Compatibility;correct_response"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 Target_Shape "rect"
+	setcycle 0 Target_Compatibility "Compatible"
+	setcycle 0 correct_response "/"
+	setcycle 1 soa "0"
+	setcycle 1 Target_Shape "rect"
+	setcycle 1 Target_Compatibility "Incompatible"
+	setcycle 1 correct_response "/"
+	setcycle 2 soa "0"
+	setcycle 2 Target_Shape "circle"
+	setcycle 2 Target_Compatibility "Compatible"
+	setcycle 2 correct_response "z"
+	setcycle 3 soa "0"
+	setcycle 3 Target_Shape "circle"
+	setcycle 3 Target_Compatibility "Incompatible"
+	setcycle 3 correct_response "z"
+	setcycle 4 soa "500"
+	setcycle 4 Target_Shape "rect"
+	setcycle 4 Target_Compatibility "Compatible"
+	setcycle 4 correct_response "/"
+	setcycle 5 soa "500"
+	setcycle 5 Target_Shape "rect"
+	setcycle 5 Target_Compatibility "Incompatible"
+	setcycle 5 correct_response "/"
+	setcycle 6 soa "500"
+	setcycle 6 Target_Shape "circle"
+	setcycle 6 Target_Compatibility "Compatible"
+	setcycle 6 correct_response "z"
+	setcycle 7 soa "500"
+	setcycle 7 Target_Shape "circle"
+	setcycle 7 Target_Compatibility "Incompatible"
+	setcycle 7 correct_response "z"
+	run Trial_1
+
+define sequence Trial_1
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Decide_Color always
+	run Intertrial always
+	run Initial always
+	run Prepare always
+	run Target always
+	run Response 2000
+	run Response_correct "[correct] = 1"
+	run Response_wrong "[correct] = 0"
+	run Response_logger always
+
+define sequence experiment
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run start always
+
+define loop start
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block"
+	set description "Repeatedly runs another item"
+	set cycles 1
+	set column_order ""
+	set break_if "never"
+	run Block
+

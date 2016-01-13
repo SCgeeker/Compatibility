@@ -1,0 +1,147 @@
+---
+API: 2
+OpenSesame: 3.0.2
+Platform: nt
+---
+set width 1024
+set uniform_coordinates "yes"
+set title "New experiment"
+set subject_parity "even"
+set subject_nr 0
+set start "experiment"
+set height 768
+set foreground "white"
+set description "Default description"
+set coordinates "uniform"
+set compensation 0
+set canvas_backend "xpyriment"
+set background "black"
+
+define sequence Block
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Block_reset always
+	run Trial always
+
+define reset_feedback Block_reset
+	set description "Resets the feedback variables, such as 'avg_rt' and 'acc'"
+
+define inline_script Decide_Color
+	set description "Executes Python code"
+	set _run ""
+	___prepare__
+	import random
+	
+	# Set up the colors of retangles and circles
+	stimulus_color_set = ['red', 'green', 'blue', 'yellow']
+	random.shuffle(stimulus_color_set)
+	color1 = stimulus_color_set[0]
+	color2 = stimulus_color_set[1]
+	color3 = stimulus_color_set[2]
+	color4 = stimulus_color_set[3]
+	exp.set("color1", color1)
+	exp.set("color2", color2)
+	exp.set("color3", color3)
+	exp.set("color4", color4)
+	__end__
+
+define sketchpad Initial
+	set duration 1000
+	set description "Displays stimuli"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+
+define sketchpad Intertrial
+	set duration 1500
+	set description "Displays stimuli"
+
+define sketchpad Prepare
+	set duration "[soa]"
+	set description "Displays stimuli"
+	draw rect color=white fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color=white penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define sketchpad Target
+	set duration 500
+	set description "Displays stimuli"
+	draw rect color="[target_color]" fill=0 h=704 penwidth=5 show_if=always w=960 x=-480 y=-352 z_index=0
+	draw line color="[target_color]" penwidth=5 show_if=always x1=0 x2=0 y1=-352 y2=352 z_index=0
+	draw rect color="[color1]" fill=1 h=288 penwidth=1 show_if=always w=288 x=96 y=32 z_index=0
+	draw circle color="[color2]" fill=1 penwidth=1 r=150 show_if=always x=-224 y=160 z_index=0
+	draw circle color="[color3]" fill=1 penwidth=1 r=150 show_if=always x=256 y=-168 z_index=0
+	draw rect color="[color4]" fill=1 h=288 penwidth=1 show_if=always w=288 x=-384 y=-320 z_index=-1
+
+define loop Trial
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Trial_1"
+	set description "Repeatedly runs another item"
+	set cycles 16
+	set column_order "soa;target_color"
+	set break_if "never"
+	setcycle 0 soa "0"
+	setcycle 0 target_color "red"
+	setcycle 1 soa "0"
+	setcycle 1 target_color "green"
+	setcycle 2 soa "0"
+	setcycle 2 target_color "blue"
+	setcycle 3 soa "0"
+	setcycle 3 target_color "yellow"
+	setcycle 4 soa "500"
+	setcycle 4 target_color "red"
+	setcycle 5 soa "500"
+	setcycle 5 target_color "green"
+	setcycle 6 soa "500"
+	setcycle 6 target_color "blue"
+	setcycle 7 soa "500"
+	setcycle 7 target_color "yellow"
+	setcycle 8 soa "1000"
+	setcycle 8 target_color "red"
+	setcycle 9 soa "1000"
+	setcycle 9 target_color "green"
+	setcycle 10 soa "1000"
+	setcycle 10 target_color "blue"
+	setcycle 11 soa "1000"
+	setcycle 11 target_color "yellow"
+	setcycle 12 soa "1500"
+	setcycle 12 target_color "red"
+	setcycle 13 soa "1500"
+	setcycle 13 target_color "green"
+	setcycle 14 soa "1500"
+	setcycle 14 target_color "blue"
+	setcycle 15 soa "1500"
+	setcycle 15 target_color "yellow"
+	run Trial_1
+
+define sequence Trial_1
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run Decide_Color always
+	run Intertrial always
+	run Initial always
+	run Prepare always
+	run Target always
+
+define sequence experiment
+	set flush_keyboard "yes"
+	set description "Runs a number of items in sequence"
+	run start always
+
+define loop start
+	set skip 0
+	set repeat 1
+	set order "random"
+	set offset "no"
+	set item "Block"
+	set description "Repeatedly runs another item"
+	set cycles 1
+	set column_order ""
+	set break_if "never"
+	run Block
+

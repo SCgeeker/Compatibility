@@ -3,10 +3,9 @@
 if(!require(stringi)){install.packages("stringi")}
 library(stringi) # Procoss the variable names, we always need this package
 
-setwd("../4_data_collection") # Run this line if you break at the last session
+setwd("../4_data_analysis") # Run this line if you break at the last session
 EXPA <- read.csv("Compatibility_A.csv") # Run this line if you break at the last session
 EXPB <- read.csv("Compatibility_B.csv") # Run this line if you break at the last session
-
 
 EXPA_M_RT <- with(data = EXPA, tapply(RT, paste(SOA, Compatibility, sep = "_"), mean))
 EXPA_M_RT.sd <- with(data = EXPA, tapply(RT, paste(SOA, Compatibility, sep = "_"), sd))
